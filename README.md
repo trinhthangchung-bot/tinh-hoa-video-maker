@@ -34,7 +34,7 @@ Dữ liệu chỉ thuộc trình duyệt/profile và địa chỉ website hiện
 
 ## Phạm vi
 
-Giao diện thích ứng với laptop và màn hình nhỏ. Chưa có xuất video, đăng nhập, đồng bộ đám mây hoặc AI. Không cần API key, cơ sở dữ liệu hay dịch vụ ngoài để chạy ứng dụng.
+Giao diện thích ứng với laptop và màn hình nhỏ. Có thư viện ảnh tham chiếu theo dự án (IndexedDB), form sản phẩm, bản nháp câu lệnh tạo theo mẫu trên thiết bị và hàng đợi cảnh sẵn sàng. Tab Video hiện chỉ lưu tên file kết quả do người dùng chọn, chưa lưu nội dung file video, chưa phát hoặc ghép video. Chưa có xuất video, đăng nhập, đồng bộ đám mây hoặc AI. Không cần API key, cơ sở dữ liệu hay dịch vụ ngoài để chạy ứng dụng.
 
 ## GitHub Pages
 

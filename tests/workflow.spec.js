@@ -1,0 +1,18 @@
+import {test,expect} from '@playwright/test';
+import {readFile} from 'node:fs/promises';
+async function create(page){await page.goto('./');await page.getByRole('button',{name:'＋ Tạo dự án',exact:true}).click();await page.getByRole('dialog').getByLabel('Tên dự án',{exact:true}).fill('Kiểm tra quy trình');await page.getByRole('button',{name:'Tạo dự án',exact:true}).click();}
+test('Nhập cảnh, chọn nhiều ảnh, sao lưu và khôi phục đầy đủ sau tải lại',async({page})=>{
+ await create(page);await page.getByRole('button',{name:'Nhân vật & Bối cảnh',exact:true}).click();
+ const png=Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+a9i0AAAAASUVORK5CYII=','base64');
+ await page.locator('#asset-files').setInputFiles([{name:'KOC_ANNA.png',mimeType:'image/png',buffer:png},{name:'SHOWROOM.png',mimeType:'image/png',buffer:png}]);
+ await expect(page.locator('.asset-card')).toHaveCount(2);await page.getByRole('button',{name:'Form / Câu lệnh'}).click();
+ await page.locator('#batch-prompts').fill('KOC_ANNA đứng trong SHOWROOM.\nCận sản phẩm.');await page.locator('#import-prompts').click();await expect(page.locator('.prompt-card')).toHaveCount(2);await page.locator('#sync-refs').click();await expect(page.locator('.prompt-card').first().locator('.ref-selected img')).toHaveCount(2);
+ await page.getByRole('button',{name:'Video',exact:true}).click();await page.locator('#import-videos').setInputFiles('tests/fixtures/clip.webm');await expect(page.locator('.video-card video')).toHaveCount(1);
+ await page.getByRole('button',{name:'Tổng quan',exact:true}).click();const downloadPromise=page.waitForEvent('download');await page.getByRole('button',{name:'Sao lưu đầy đủ'}).click();const dl=await downloadPromise;const backup=await readFile(await dl.path());
+ await page.locator('#restore-file').setInputFiles({name:'backup.json',mimeType:'application/json',buffer:backup});await expect(page.locator('#count')).toHaveText('2');await page.reload();await page.locator('#projects .project').filter({hasText:'(khôi phục)'}).click();await page.getByRole('button',{name:'Form / Câu lệnh'}).click();await expect(page.locator('.prompt-card').first().locator('.ref-selected img')).toHaveCount(2);
+ await page.getByRole('button',{name:'Video',exact:true}).click();await expect(page.locator('.video-card video')).toHaveCount(1);await expect.poll(()=>page.locator('.video-card video').evaluate(v=>v.readyState)).toBeGreaterThan(0);
+});
+test('Nhập hai clip, đổi thứ tự, ghép thật và lưu kết quả sau reload',async({page})=>{
+ await create(page);await page.getByRole('button',{name:'Video',exact:true}).click();const buffer=await readFile('tests/fixtures/clip.webm');await page.locator('#import-videos').setInputFiles([{name:'A.webm',mimeType:'video/webm',buffer},{name:'B.webm',mimeType:'video/webm',buffer}]);await expect(page.locator('.video-card video')).toHaveCount(2);await page.getByRole('button',{name:'Đưa cảnh 2 lên'}).click();await expect(page.locator('.video-card').first()).toContainText('B.webm');await page.locator('#merge-videos').click();await expect(page.locator('#merged-output')).toBeVisible({timeout:30000});await expect.poll(()=>page.locator('#merged-output video').evaluate(v=>v.readyState)).toBeGreaterThan(0);
+ const download=page.waitForEvent('download');await page.locator('#download-merged').click();expect((await download).suggestedFilename()).toBe('tinh-hoa-ghep.webm');await page.reload();await page.locator('#projects .project').first().click();await page.getByRole('button',{name:'Video',exact:true}).click();await expect(page.locator('#merged-output')).toBeVisible();
+});

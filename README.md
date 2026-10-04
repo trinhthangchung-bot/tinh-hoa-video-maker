@@ -43,3 +43,13 @@ Website: https://trinhthangchung-bot.github.io/tinh-hoa-video-maker/
 Vite sử dụng base path `/tinh-hoa-video-maker/`. Trong repository trên GitHub, vào Settings → Pages → Build and deployment → Source và chọn **GitHub Actions**. Workflow `.github/workflows/deploy-pages.yml` tự chạy mỗi lần push vào `main`, hoặc có thể chạy thủ công từ Actions. Workflow cài phụ thuộc theo lockfile, chạy kiểm thử trình duyệt development và production, build rồi triển khai `dist` qua GitHub Pages.
 
 Khi chạy local, mở đường dẫn `/tinh-hoa-video-maker/` trên máy chủ Vite. Dữ liệu local và website công khai thuộc hai origin khác nhau, nên dự án cũ trên local không tự chuyển sang GitHub Pages.
+
+
+## Nâng cấp quy trình 04/10/2026
+
+- Dán mỗi dòng thành một cảnh; chọn nhiều ảnh, xem ảnh đã gắn, gắn theo tên xuất hiện trong câu lệnh. Mẫu 40 giây tạo 5 cảnh 8 giây; bản nháp vẫn là mẫu, chưa gọi AI.
+- Nhập file video thật (tối đa 250 MB/clip), lưu IndexedDB, xem, đổi thứ tự, tải lại.
+- Ghép clip bằng Canvas + Web Audio + MediaRecorder; xuất WebM có âm thanh, không xuất MP4. Ghép theo thời gian thực, cần giữ tab hiển thị. Hủy hoặc lỗi giữ nguyên clip gốc.
+- Sao lưu JSON gồm metadata, ảnh và video (tối đa 100 MB dữ liệu nhị phân); khôi phục thành dự án mới, không ghi đè dự án hiện có. Video lớn cần tải riêng.
+- Dữ liệu vẫn nằm trên trình duyệt của thiết bị. Tải bản sao lưu trước khi xóa dữ liệu trình duyệt.
+- Chưa có kết nối Flow/API, chưa có tạo video hoặc viết prompt bằng AI.

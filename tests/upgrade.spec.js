@@ -63,6 +63,13 @@ test('Form, ảnh tham chiếu, câu lệnh và hàng đợi video giữ dữ li
   await expect(page.locator('[data-product="name"]')).toHaveValue('Trà Tinh Hoa');
   await expect(page.locator('.prompt-card')).toHaveCount(3);
   await expect(page.locator('[data-prompt-asset]').first()).toHaveValue(assetId);
+  await page.getByRole('button', { name: 'Thu gọn cảnh 1' }).click();
+  await expect(page.getByLabel('Câu lệnh cảnh 1')).toBeHidden();
+  await page.waitForTimeout(500);
+  await page.reload();
+  await page.getByRole('button', { name: /^Nội dung/ }).click();
+  await page.getByRole('button', { name: /^Form \/ Câu lệnh/ }).click();
+  await expect(page.getByRole('button', { name: 'Mở rộng cảnh 1' })).toBeVisible();
   await page.getByRole('button', { name: 'Video', exact: true }).click();
   await expect(page.locator('.video-card')).toContainText('canh-1.mp4');
 });

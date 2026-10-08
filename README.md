@@ -60,3 +60,6 @@ Khi chạy local, mở đường dẫn `/tinh-hoa-video-maker/` trên máy chủ
 - Tạo bản nháp theo mẫu, không phải AI: 8/16/40/60 giây hoặc video dài tối đa 300 giây, chia cảnh tối đa 8 giây. Cảnh cuối có thể ngắn hơn; đây là kế hoạch dựng, không phải bảo đảm thời lượng đầu ra của nhà cung cấp.
 - Có sao chép từng câu lệnh, xuất TXT cùng danh sách ảnh, chuyển các cảnh sẵn sàng sang Video không thêm trùng. Các thông tin thương hiệu và tham chiếu được giữ khi sao lưu/khôi phục.
 - Không gọi Flow hoặc Veo API, không tiêu tín dụng; bản nháp cần được biên tập lời thoại và kiểm tra trước khi sử dụng.
+
+## Không gian riêng theo loại video
+Chọn một trong bốn loại ở màn hình đầu để vào Tổng quan, không mở hộp tạo dự án ngay. Menu Tổng quan / Nhân vật & Bối cảnh / Form / Video / Cài đặt nằm dọc bên trái. Tổng quan có ba phần tạo mới, dự án gần đây và khôi phục; danh sách lọc theo loại video. Bản sao lưu khác loại được từ chối trước khi ghi dữ liệu, kèm hướng dẫn chọn đúng loại. Dự án cũ chưa có loại được xếp vào Video sản phẩm; không xóa hoặc tạo lại dữ liệu cũ.

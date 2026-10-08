@@ -53,3 +53,10 @@ Khi chạy local, mở đường dẫn `/tinh-hoa-video-maker/` trên máy chủ
 - Sao lưu JSON gồm metadata, ảnh và video (tối đa 100 MB dữ liệu nhị phân); khôi phục thành dự án mới, không ghi đè dự án hiện có. Video lớn cần tải riêng.
 - Dữ liệu vẫn nằm trên trình duyệt của thiết bị. Tải bản sao lưu trước khi xóa dữ liệu trình duyệt.
 - Chưa có kết nối Flow/API, chưa có tạo video hoặc viết prompt bằng AI.
+
+## Form và thương hiệu (bản cập nhật)
+- Tab Cài đặt lưu tên thương hiệu, website, phong cách, giọng đọc mong muốn, CTA, font giao diện và logo PNG/JPG/WebP tối đa 500 KB theo từng dự án. Logo chưa đóng lên video.
+- Form chọn/tải tối đa 7 ảnh sản phẩm, cùng nhân vật và bối cảnh mặc định. Các ảnh được gắn vào cảnh mới và có thể sửa riêng từng cảnh.
+- Tạo bản nháp theo mẫu, không phải AI: 8/16/40/60 giây hoặc video dài tối đa 300 giây, chia cảnh tối đa 8 giây. Cảnh cuối có thể ngắn hơn; đây là kế hoạch dựng, không phải bảo đảm thời lượng đầu ra của nhà cung cấp.
+- Có sao chép từng câu lệnh, xuất TXT cùng danh sách ảnh, chuyển các cảnh sẵn sàng sang Video không thêm trùng. Các thông tin thương hiệu và tham chiếu được giữ khi sao lưu/khôi phục.
+- Không gọi Flow hoặc Veo API, không tiêu tín dụng; bản nháp cần được biên tập lời thoại và kiểm tra trước khi sử dụng.

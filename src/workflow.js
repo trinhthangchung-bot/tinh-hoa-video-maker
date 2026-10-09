@@ -10,7 +10,7 @@ export async function importProject(file){
   if(file.size>145*1024*1024)throw Error('File sao lưu quá lớn (tối đa 145 MB).');
   let data;try{data=JSON.parse(await file.text());}catch{throw Error('File không phải bản sao lưu JSON hợp lệ.');}
   const p=data.project;
-  if(data.format!=='tinh-hoa-backup'||data.version!==1||!p||typeof p.name!=='string'||!p.name.trim()||typeof p.notes!=='string'||!Array.isArray(p.prompts)||!Array.isArray(p.videos)||!Array.isArray(data.assets)||!Array.isArray(data.media)||data.assets.length>50||p.prompts.length>1000||p.videos.length>1000)throw Error('Cấu trúc bản sao lưu không hợp lệ.');
+  if(data.format!=='tinh-hoa-backup'||data.version!==1||!p||typeof p.name!=='string'||!p.name.trim()||typeof p.notes!=='string'||!Array.isArray(p.prompts)||!Array.isArray(p.videos)||!Array.isArray(data.assets)||!Array.isArray(data.media)||data.assets.length>50||p.prompts.length>2000||p.videos.length>1000)throw Error('Cấu trúc bản sao lưu không hợp lệ.');
   const id=crypto.randomUUID(),map=new Map(),newId=old=>{if(typeof old!=='string'||!old)throw Error('Mã dữ liệu trong bản sao lưu không hợp lệ.');if(!map.has(old))map.set(old,crypto.randomUUID());return map.get(old);};
   const unpack=(rows,kind)=>rows.map(r=>{if(typeof r.data!=='string'||!r.data.startsWith('data:'+kind+'/')||!r.data.includes(';base64,'))throw Error('File ảnh hoặc video trong bản sao lưu không hợp lệ.');const [head,base64]=r.data.split(',');let raw;try{raw=atob(base64);}catch{throw Error('Dữ liệu file bị hỏng.');}const blob=new Blob([Uint8Array.from(raw,c=>c.charCodeAt(0))],{type:head.slice(5,head.indexOf(';'))});return {id:kind==='video'&&r.id===p.id+'-merged'?id+'-merged':newId(r.id),projectId:id,name:String(r.name||'File'),type:['product','character','context'].includes(r.type)?r.type:'product',blob,createdAt:Date.now()};});
   const assets=unpack(data.assets,'image'),media=unpack(data.media,'video');
@@ -24,7 +24,8 @@ export async function importProject(file){
   if(typeof p.brand?.logo==='string'&&p.brand.logo.length<700000&&/^data:image\/(png|jpeg|webp);base64,/.test(p.brand.logo))brand.logo=p.brand.logo;
   if(p.episodes!==undefined&&(!Array.isArray(p.episodes)||p.episodes.length>50||p.episodes.some(e=>!e||typeof e.title!=='string'||typeof e.idea!=='string'||e.title.length>120||e.idea.length>20000)))throw Error('Danh sách tập / sản phẩm trong bản sao lưu không hợp lệ.');
   const episodes=(p.episodes||[]).map(e=>({id:crypto.randomUUID(),title:e.title,idea:e.idea})),seriesKind=episodes.length?(p.seriesKind==='products'?'products':'series'):'single';
-  return {project:{id,brand,episodes,seriesKind,name:p.name+' (khôi phục)',notes:p.notes,product,prompts,videos,updatedAt:Date.now()},assets,media};
+  const referencePrompts=Array.isArray(p.referencePrompts)?p.referencePrompts.filter(r=>['product','character','context'].includes(r.type)).slice(0,3).map(r=>({id:crypto.randomUUID(),type:r.type,text:String(r.text||''),required:r.required===true,assetId:map.get(r.assetId)||''})):undefined;
+  return {project:{id,brand,episodes,seriesKind,referencePrompts,name:p.name+' (khôi phục)',notes:p.notes,product,prompts,videos,updatedAt:Date.now()},assets,media};
 }
 function once(target,event,timeout=20000){return new Promise((resolve,reject)=>{const done=e=>{clearTimeout(t);target.removeEventListener(event,ok);target.removeEventListener('error',fail);e?reject(e):resolve();},ok=()=>done(),fail=()=>done(Error('Không giải mã được clip. Hãy thử file MP4 hoặc WebM khác.')),t=setTimeout(()=>done(Error('Clip không phản hồi. Hãy thử lại.')),timeout);target.addEventListener(event,ok,{once:true});target.addEventListener('error',fail,{once:true});});}
 export async function mergeClips(blobs,ratio,brand={}){

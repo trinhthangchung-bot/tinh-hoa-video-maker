@@ -1,6 +1,6 @@
 import {test,expect} from '@playwright/test';
 import {readFile} from 'node:fs/promises';
-async function create(page){await page.goto('./');await page.locator('[data-video-mode="product"]').click();await page.getByRole('button',{name:'＋ Tạo dự án',exact:true}).click();await page.getByRole('dialog').getByLabel('Tên dự án',{exact:true}).fill('Kiểm tra quy trình');await page.getByRole('button',{name:'Tạo dự án',exact:true}).click();}
+async function create(page){await page.goto('./');await page.locator('[data-video-mode="product"]').click();await page.locator('[data-hub-tab=\"new\"]').click();await page.getByRole('button',{name:'＋ Tạo dự án',exact:true}).click();await page.getByRole('dialog').getByLabel('Tên dự án',{exact:true}).fill('Kiểm tra quy trình');await page.getByRole('button',{name:'Tạo dự án',exact:true}).click();}
 test('Nhập cảnh, chọn nhiều ảnh, sao lưu và khôi phục đầy đủ sau tải lại',async({page})=>{
  await create(page);await page.getByRole('button',{name:'Nhân vật & Bối cảnh',exact:true}).click();
  const png=Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+a9i0AAAAASUVORK5CYII=','base64');

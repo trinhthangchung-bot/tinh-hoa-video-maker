@@ -1,7 +1,7 @@
 import {test,expect} from '@playwright/test';
 import fs from 'node:fs/promises';
 const image={name:'SAN_PHAM.png',mimeType:'image/png',buffer:Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+a0d8AAAAASUVORK5CYII=','base64')};
-async function create(page){await page.goto('./');await page.locator('[data-video-mode="product"]').click();await page.locator('#new').click();await page.getByRole('dialog').getByLabel('Tên dự án').fill('Thương hiệu thử');await page.getByRole('button',{name:'Tạo dự án',exact:true}).click();}
+async function create(page){await page.goto('./');await page.locator('[data-video-mode="product"]').click();await page.locator('[data-hub-tab=\"new\"]').click();await page.locator('#new').click();await page.getByRole('dialog').getByLabel('Tên dự án').fill('Thương hiệu thử');await page.getByRole('button',{name:'Tạo dự án',exact:true}).click();}
 async function tab(page,name){await page.getByRole('button',{name,exact:true}).click();}
 test('Brand, selected product images and draft timings survive full backup restore',async({page})=>{
  await create(page);await tab(page,'Cài đặt');await page.locator('[data-brand="name"]').fill('Tinh Hoa kiểm thử');await page.locator('#brand-logo').setInputFiles(image);await expect(page.locator('#logo-preview img')).toBeVisible();await page.locator('#save-settings').click();

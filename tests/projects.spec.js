@@ -1,7 +1,7 @@
 import {test, expect} from '@playwright/test';
 async function create(page, name) {
   if(await page.locator('.home-layout [data-video-mode="product"]').isVisible()) await page.locator('[data-video-mode="product"]').click();
-  await page.getByRole('button', {name:'＋ Tạo dự án', exact:true}).click();
+  await page.locator('[data-hub-tab=\"new\"]').click();await page.getByRole('button', {name:'＋ Tạo dự án', exact:true}).click();
   await page.getByRole('dialog').getByRole('textbox', {name:'Tên dự án',exact:true}).fill(name);
   await page.getByRole('button', {name:'Tạo dự án',exact:true}).click();
 }
@@ -58,7 +58,7 @@ test('Xóa cần xác nhận, hủy giữ lại và xác nhận xóa tồn tại
 });
 test('Tên rỗng bị chặn và nội dung HTML được hiển thị an toàn', async ({page}) => {
   await page.goto('./'); await page.locator('[data-video-mode="product"]').click();
-  await page.getByRole('button',{name:'＋ Tạo dự án',exact:true}).click();
+  await page.locator('[data-hub-tab=\"new\"]').click();await page.getByRole('button',{name:'＋ Tạo dự án',exact:true}).click();
   await page.getByRole('dialog').getByLabel('Tên dự án',{exact:true}).fill('   ');
   await page.getByRole('button',{name:'Tạo dự án',exact:true}).click();
   await expect(page.getByRole('alert')).toHaveText('Vui lòng nhập tên dự án.');

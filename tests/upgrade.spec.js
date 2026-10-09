@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 async function create(page, name) {
   if(await page.locator('.home-layout [data-video-mode="product"]').isVisible()) await page.locator('[data-video-mode="product"]').click();
-  await page.getByRole('button', { name: '＋ Tạo dự án', exact: true }).click();
+  await page.locator('[data-hub-tab=\"new\"]').click();await page.getByRole('button', { name: '＋ Tạo dự án', exact: true }).click();
   await page.getByRole('dialog').getByLabel('Tên dự án').fill(name);
   await page.getByRole('button', { name: 'Tạo dự án', exact: true }).click();
 }

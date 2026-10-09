@@ -19,7 +19,7 @@ export async function importProject(file){
   const product={};for(const key of ['name','description','audience','idea','duration','kind','ratio','characterBrief','contextBrief','longSeconds','sceneSeconds'])product[key]=String(p.product?.[key]||'');
   product.imageIds=(Array.isArray(p.product?.imageIds)?p.product.imageIds:[]).filter(x=>assets.some(a=>a.id===map.get(x))).slice(0,7).map(x=>map.get(x));
   for(const k of ['characterId','contextId'])product[k]=assets.some(a=>a.id===map.get(p.product?.[k]))?map.get(p.product[k]):'';
-  const brand={};for(const k of ['name','website','voice','style','cta','font','language','music','negative'])if(typeof p.brand?.[k]==='string')brand[k]=p.brand[k];
+  const brand={};for(const k of ['name','website','voice','style','cta','font','language','music','negative','voiceOptions'])if(typeof p.brand?.[k]==='string')brand[k]=p.brand[k];
   brand.logoEnabled=p.brand?.logoEnabled===true;brand.logoPosition=['top-left','top-right','bottom-left','bottom-right'].includes(p.brand?.logoPosition)?p.brand.logoPosition:'bottom-right';brand.logoSize=Math.min(35,Math.max(5,Number(p.brand?.logoSize)||15));brand.logoOpacity=Math.min(100,Math.max(10,Number(p.brand?.logoOpacity)||85));
   if(typeof p.brand?.logo==='string'&&p.brand.logo.length<700000&&/^data:image\/(png|jpeg|webp);base64,/.test(p.brand.logo))brand.logo=p.brand.logo;
   if(p.episodes!==undefined&&(!Array.isArray(p.episodes)||p.episodes.length>50||p.episodes.some(e=>!e||typeof e.title!=='string'||typeof e.idea!=='string'||e.title.length>120||e.idea.length>20000)))throw Error('Danh sách tập / sản phẩm trong bản sao lưu không hợp lệ.');

@@ -1,11 +1,11 @@
 import {test, expect} from '@playwright/test';
 async function create(page, name) {
-  if(await page.locator('[data-video-mode="product"]').isVisible()) await page.locator('[data-video-mode="product"]').click();
+  if(await page.locator('.home-layout [data-video-mode="product"]').isVisible()) await page.locator('[data-video-mode="product"]').click();
   await page.getByRole('button', {name:'＋ Tạo dự án', exact:true}).click();
   await page.getByRole('dialog').getByRole('textbox', {name:'Tên dự án',exact:true}).fill(name);
   await page.getByRole('button', {name:'Tạo dự án',exact:true}).click();
 }
-async function open(page, name) { if(await page.locator('[data-video-mode="product"]').isVisible()) await page.locator('[data-video-mode="product"]').click(); await page.getByRole('button', {name:new RegExp('^'+name)}).click(); }
+async function open(page, name) { if(await page.locator('.home-layout [data-video-mode="product"]').isVisible()) await page.locator('[data-video-mode="product"]').click(); await page.getByRole('button', {name:new RegExp('^'+name)}).click(); }
 test('Tạo, đổi tên, tự động lưu, đóng, mở lại và tải lại vẫn giữ dữ liệu', async ({page}) => {
   await page.goto('./');
   await create(page,'Video đầu tiên');

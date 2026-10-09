@@ -1,0 +1,13 @@
+import {test,expect} from '@playwright/test';
+test('Inline text creation retains series ideas across navigation, reload and backup',async({page})=>{
+ await page.goto('./');await page.locator('[data-video-mode="text"]').click();await page.locator('[data-hub-tab="new"]').click();
+ await expect(page.getByRole('dialog')).not.toBeVisible();
+ await page.locator('#new-project-name').fill('Bộ phim Tinh Hoa');await page.locator('#new-project-idea').fill('Câu chuyện chung');
+ await page.locator('#new-project-multiple').check();await page.locator('#new-series-count').fill('3');await page.locator('#new-series-count').press('Tab');
+ await page.locator('[data-draft-title="0"]').fill('Khởi đầu');await page.locator('[data-draft-idea="0"]').fill('Ý tưởng tập một');
+ await page.locator('[data-hub-tab="recent"]').click();await page.locator('[data-hub-tab="new"]').click();await expect(page.locator('#new-project-name')).toHaveValue('Bộ phim Tinh Hoa');await expect(page.locator('[data-draft-idea="0"]')).toHaveValue('Ý tưởng tập một');
+ await page.locator('#text-project-form button[type="submit"]').click();await expect(page.locator('#name')).toHaveValue('Bộ phim Tinh Hoa');await expect(page.locator('#notes')).toHaveValue('Câu chuyện chung');await expect(page.locator('[data-episode-title]')).toHaveCount(3);
+ await page.locator('[data-episode-idea="1"]').fill('Nội dung tập hai');await page.locator('#save').click();await page.reload();await page.locator('[data-video-mode="text"]').click();await page.locator('#projects .project').first().click();await expect(page.locator('[data-episode-idea="1"]')).toHaveValue('Nội dung tập hai');
+ const dl=page.waitForEvent('download');await page.locator('#backup').click();const file=await(await dl).path();await page.locator('#restore-file').setInputFiles(file);await expect(page.locator('#name')).toHaveValue('Bộ phim Tinh Hoa (khôi phục)');await expect(page.locator('[data-episode-idea="1"]')).toHaveValue('Nội dung tập hai');
+ await page.locator('[data-hub-tab="new"]').click();await page.locator('#new-project-name').fill('Một video');await page.locator('#new-project-idea').fill('Ý tưởng độc lập');await expect(page.locator('#new-project-multiple')).not.toBeChecked();await page.locator('#text-project-form button[type="submit"]').click();await expect(page.locator('#name')).toHaveValue('Một video');await expect(page.locator('[data-episode-title]')).toHaveCount(0);
+});

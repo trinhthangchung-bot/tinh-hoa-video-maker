@@ -21,7 +21,9 @@ export async function importProject(file){
   for(const k of ['characterId','contextId'])product[k]=assets.some(a=>a.id===map.get(p.product?.[k]))?map.get(p.product[k]):'';
   const brand={};for(const k of ['name','website','voice','style','cta','font'])if(typeof p.brand?.[k]==='string')brand[k]=p.brand[k];
   if(typeof p.brand?.logo==='string'&&p.brand.logo.length<700000&&/^data:image\/(png|jpeg|webp);base64,/.test(p.brand.logo))brand.logo=p.brand.logo;
-  return {project:{id,brand,name:p.name+' (khôi phục)',notes:p.notes,product,prompts,videos,updatedAt:Date.now()},assets,media};
+  if(p.episodes!==undefined&&(!Array.isArray(p.episodes)||p.episodes.length>50||p.episodes.some(e=>!e||typeof e.title!=='string'||typeof e.idea!=='string'||e.title.length>120||e.idea.length>20000)))throw Error('Danh sách tập / sản phẩm trong bản sao lưu không hợp lệ.');
+  const episodes=(p.episodes||[]).map(e=>({id:crypto.randomUUID(),title:e.title,idea:e.idea})),seriesKind=episodes.length?(p.seriesKind==='products'?'products':'series'):'single';
+  return {project:{id,brand,episodes,seriesKind,name:p.name+' (khôi phục)',notes:p.notes,product,prompts,videos,updatedAt:Date.now()},assets,media};
 }
 function once(target,event,timeout=20000){return new Promise((resolve,reject)=>{const done=e=>{clearTimeout(t);target.removeEventListener(event,ok);target.removeEventListener('error',fail);e?reject(e):resolve();},ok=()=>done(),fail=()=>done(Error('Không giải mã được clip. Hãy thử file MP4 hoặc WebM khác.')),t=setTimeout(()=>done(Error('Clip không phản hồi. Hãy thử lại.')),timeout);target.addEventListener(event,ok,{once:true});target.addEventListener('error',fail,{once:true});});}
 export async function mergeClips(blobs,ratio){

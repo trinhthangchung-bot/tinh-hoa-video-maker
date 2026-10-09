@@ -38,3 +38,5 @@
 .hub-tabs button.active{background:#fff0cf;border-color:#c69830;color:#193d2e}
 .project-hub>[hidden]{display:none!important}
 @media(max-width:650px){.hub-tabs button{flex:0 0 auto;font-size:11px;padding:12px 9px}}
+
+.text-project-form{width:100%;display:grid;gap:12px}.text-project-form>label{font-weight:650}.text-project-form textarea{min-height:130px;width:100%}.text-project-form>button{justify-self:start}.series-toggle{display:flex;align-items:center;gap:10px;padding:16px 0}.series-toggle input{width:18px;height:18px}.episode-row{display:flex;align-items:flex-start;gap:14px;border:1px solid #e6e1d7;border-radius:12px;padding:18px;margin-top:14px;background:#fffefa}.episode-row>strong{background:#ffebbf;padding:8px 12px;border-radius:50%}.episode-row>div{flex:1;min-width:0;display:grid;gap:12px}.episode-row label{display:grid;gap:8px}.episode-row textarea{width:100%;min-height:85px}.episode-editor{margin-top:20px}.text-project-form #new-project-error{color:#a33434;margin:0}

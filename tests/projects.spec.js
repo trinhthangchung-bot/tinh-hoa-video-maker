@@ -1,10 +1,11 @@
 import {test, expect} from '@playwright/test';
 async function create(page, name) {
+  if(await page.locator('[data-video-mode="product"]').isVisible()) await page.locator('[data-video-mode="product"]').click();
   await page.getByRole('button', {name:'＋ Tạo dự án', exact:true}).click();
   await page.getByRole('dialog').getByRole('textbox', {name:'Tên dự án',exact:true}).fill(name);
   await page.getByRole('button', {name:'Tạo dự án',exact:true}).click();
 }
-async function open(page, name) { await page.getByRole('button', {name:new RegExp('^'+name)}).click(); }
+async function open(page, name) { if(await page.locator('[data-video-mode="product"]').isVisible()) await page.locator('[data-video-mode="product"]').click(); await page.getByRole('button', {name:new RegExp('^'+name)}).click(); }
 test('Tạo, đổi tên, tự động lưu, đóng, mở lại và tải lại vẫn giữ dữ liệu', async ({page}) => {
   await page.goto('./');
   await create(page,'Video đầu tiên');
@@ -53,10 +54,10 @@ test('Xóa cần xác nhận, hủy giữ lại và xác nhận xóa tồn tại
   await page.getByRole('button',{name:'Xóa dự án Cần xóa',exact:true}).click();
   await page.getByRole('button',{name:'Xóa dự án',exact:true}).click();
   await expect(page.locator('#count')).toHaveText('0');
-  await page.reload(); await expect(page.locator('#count')).toHaveText('0');
+  await page.reload(); await page.locator('[data-video-mode="product"]').click(); await expect(page.locator('#count')).toHaveText('0');
 });
 test('Tên rỗng bị chặn và nội dung HTML được hiển thị an toàn', async ({page}) => {
-  await page.goto('./');
+  await page.goto('./'); await page.locator('[data-video-mode="product"]').click();
   await page.getByRole('button',{name:'＋ Tạo dự án',exact:true}).click();
   await page.getByRole('dialog').getByLabel('Tên dự án',{exact:true}).fill('   ');
   await page.getByRole('button',{name:'Tạo dự án',exact:true}).click();
@@ -82,7 +83,7 @@ test('Dữ liệu hỏng được bảo toàn, không bị ghi đè', async ({pa
   await page.evaluate(() => localStorage.setItem('tinh-hoa.projects.v1','broken'));
   await page.reload();
   await expect(page.getByRole('alert')).toContainText('Dữ liệu gốc được giữ nguyên');
-  await expect(page.getByRole('button',{name:'＋ Tạo dự án',exact:true})).toBeDisabled();
+  await expect(page.locator('[data-video-mode]:disabled')).toHaveCount(4);
   expect(await page.evaluate(() => localStorage.getItem('tinh-hoa.projects.v1'))).toBe('broken');
 });
 test('Tab thứ hai không ghi đè dữ liệu đã thay đổi ở tab đầu', async ({page,context}) => {

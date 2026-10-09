@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 async function create(page, name) {
+  if(await page.locator('[data-video-mode="product"]').isVisible()) await page.locator('[data-video-mode="product"]').click();
   await page.getByRole('button', { name: '＋ Tạo dự án', exact: true }).click();
   await page.getByRole('dialog').getByLabel('Tên dự án').fill(name);
   await page.getByRole('button', { name: 'Tạo dự án', exact: true }).click();
@@ -21,7 +22,7 @@ test('Thư viện ảnh: tải lên, phân loại, đổi tên, mở lại và x
   await page.getByLabel('Tên ảnh').press('Tab');
   await page.locator('[data-asset-type]').selectOption('character');
   await expect(page.locator('[data-asset-type]')).toHaveValue('character');
-  await page.reload();
+  await page.reload();await page.locator('[data-video-mode="product"]').click();
   await page.getByRole('button', { name: /^Thư viện/ }).click(); await library(page);
   await expect(page.getByLabel('Tên ảnh')).toHaveValue('Nhân vật chính');
   await expect(page.locator('[data-asset-type]')).toHaveValue('character');
@@ -32,7 +33,7 @@ test('Thư viện ảnh: tải lên, phân loại, đổi tên, mở lại và x
   page.once('dialog', d => d.accept());
   await page.locator('[data-delete-asset]').click();
   await expect(page.locator('.asset-card')).toHaveCount(0);
-  await page.reload();
+  await page.reload();await page.locator('[data-video-mode="product"]').click();
   await page.getByRole('button', { name: /^Thư viện/ }).click(); await library(page);
   await expect(page.locator('.asset-card')).toHaveCount(0);
 });
@@ -57,7 +58,7 @@ test('Form, ảnh tham chiếu, câu lệnh và hàng đợi video giữ dữ li
   await expect(page.locator('.video-card')).toHaveCount(1);
   await page.locator('[data-video-file]').setInputFiles('tests/fixtures/clip.webm');
   await expect(page.locator('.video-card')).toContainText('clip.webm');
-  await page.reload();
+  await page.reload();await page.locator('[data-video-mode="product"]').click();
   await page.getByRole('button', { name: /^Nội dung/ }).click();
   await page.getByRole('button', { name: /^Form \/ Câu lệnh/ }).click();
   await expect(page.locator('[data-product="name"]')).toHaveValue('Trà Tinh Hoa');
@@ -66,7 +67,7 @@ test('Form, ảnh tham chiếu, câu lệnh và hàng đợi video giữ dữ li
   await page.getByRole('button', { name: 'Thu gọn cảnh 1' }).click();
   await expect(page.getByLabel('Câu lệnh cảnh 1')).toBeHidden();
   await page.waitForTimeout(500);
-  await page.reload();
+  await page.reload();await page.locator('[data-video-mode="product"]').click();
   await page.getByRole('button', { name: /^Nội dung/ }).click();
   await page.getByRole('button', { name: /^Form \/ Câu lệnh/ }).click();
   await expect(page.getByRole('button', { name: 'Mở rộng cảnh 1' })).toBeVisible();

@@ -13,6 +13,7 @@ export function ensureEpisodes(p){
 export function episodeWorkspace(p){
  if(p.product?.kind!=='Video từ văn bản')return {view:p,commit(){}};
  const e=p.episodes.find(e=>e.id===p.activeEpisodeId),view={...p,episodes:[],episodeId:e.id,notes:[p.notes,e.idea].filter(Boolean).join('\n'),prompts:p.prompts.filter(s=>s.episodeId===e.id),videos:p.videos.filter(v=>v.episodeId===e.id)};
+ view.episodeSettings=!!e.settings;
  if(e.settings){view.product={...p.product,ratio:e.settings.ratio,duration:e.settings.seconds<=60?e.settings.seconds+' giây':'Video dài',longSeconds:e.settings.seconds,sceneSeconds:e.settings.sceneSeconds||p.product.sceneSeconds};view.brand={...p.brand,style:e.settings.style};}
  Object.defineProperty(view,'referencePrompts',{get:()=>e.settings?e.referencePrompts:p.referencePrompts,set:v=>{if(e.settings)e.referencePrompts=v;else p.referencePrompts=v;},enumerable:true});
  return {view,commit(){if(e.settings){e.settings={ratio:view.product.ratio,seconds:view.product.duration==='Video dài'?Number(view.product.longSeconds):parseInt(view.product.duration)||40,sceneSeconds:Number(view.product.sceneSeconds)||8,style:view.brand.style};p.brand={...view.brand,style:p.brand.style};p.product={...view.product,ratio:p.product.ratio,duration:p.product.duration,longSeconds:p.product.longSeconds,sceneSeconds:p.product.sceneSeconds};}for(const key of ['prompts','videos'])p[key]=[...p[key].filter(s=>s.episodeId!==e.id),...view[key].map(s=>({...s,episodeId:e.id}))];}};
